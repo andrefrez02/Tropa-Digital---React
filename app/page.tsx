@@ -1,103 +1,149 @@
+"use client";
 import Image from "next/image";
+import { User, users } from "./Components/users";
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { setLoggedUser } = useAuth();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const found: User | undefined = users.find(
+      (user) => user.email === email && user.password === password
+    );
+    if (found) {
+      setSuccess(true);
+      setError("");
+      setLoggedUser(found);
+      window.location.assign("/dashboard");
+      console.log("Usuário encontrado:", found);
+    } else {
+      setError("E-mail ou senha inválidos.");
+      setSuccess(false);
+    }
+  };
+
+  return (
+    <div
+      className="flex min-h-screen flex-col items-center justify-center p-24"
+      style={{ backgroundColor: "#f9fbff" }}
+    >
+      <div
+        className="bg-white rounded-[30px] p-5  text-[#cc6237] w-[50%]"
+        style={{ boxShadow: "0px 100px 200px 0px #00000040" }}
+      >
+        <div className="flex justify-between items-center">
+          <div>
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              width={64}
+              height={64}
+              className="w-64 h-16 my-8 object-contain"
+              src="/logo.svg"
+              alt="Tropa Digital Logo"
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold">Bem-vindo de volta</h1>
+              <h2 className="text-[#95a6c7]">
+                Entre com sua conta para acessar o painel
+              </h2>
+            </div>
+            <div>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <label htmlFor="email" className="block text-base font-bold">
+                  E-mail
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="seunome@seuservidor.com"
+                  className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <label htmlFor="password" className="block text-base font-bold">
+                  Senha
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="Digite aqui"
+                    className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold pr-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#cc6237] focus:outline-none"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    tabIndex={-1}
+                    aria-label={
+                      showPassword ? "Ocultar senha" : "Mostrar senha"
+                    }
+                  >
+                    {showPassword ? (
+                      <Image
+                        src="/olho-aberto.svg"
+                        alt="Olho aberto (mostrar senha)"
+                        width={20}
+                        height={20}
+                        style={{
+                          filter:
+                            "invert(43%) sepia(15%) saturate(2390%) hue-rotate(332deg) brightness(104%) contrast(88%)",
+                        }}
+                      />
+                    ) : (
+                      <Image
+                        src="/olho-fechado.svg"
+                        alt="Olho fechado (ocultar senha)"
+                        width={20}
+                        height={20}
+                        style={{
+                          filter:
+                            "invert(43%) sepia(15%) saturate(2390%) hue-rotate(332deg) brightness(104%) contrast(88%)",
+                        }}
+                      />
+                    )}
+                  </button>
+                </div>
+                {error && (
+                  <div className="text-red-500 font-semibold">{error}</div>
+                )}
+                {success && (
+                  <div className="text-green-600 font-semibold">
+                    Login realizado com sucesso!
+                  </div>
+                )}
+                <button className="px-6 py-2 rounded-full bg-[#cc6237] text-white font-semibold hover:bg-[#b0552f] transition-colors btn-lg cursor-pointer mt-4">
+                  Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+          <div className="flex items-center justify-center ml-6 h-max-w-xs w-max-w-xs">
+            <Image
+              width={64}
+              height={64}
+              className="w-max h-max"
+              src="/login.svg"
+              alt="Tropa Digital Logo"
+              priority
+            />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
