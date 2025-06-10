@@ -19,9 +19,6 @@ export default function Sidebar() {
   if (loggedUser === null) {
     return null;
   }
-  if (pathname === "/") {
-    return null;
-  }
 
   return (
     <aside className="w-[210px] h-screen flex flex-col justify-between bg-white text-zinc-900 transition-colors duration-200 ease-in-out">
@@ -86,7 +83,7 @@ export default function Sidebar() {
       </div>
 
       <div className="border-t border-zinc-800 px-8 py-6 flex flex-col items-center gap-3">
-        <Link href="/editar" className="font-semibold">
+        <Link href="/editar" className="font-semibold flex items-center gap-2">
           <span>
             <Image width={16} height={16} src="/editar.svg" alt="Editar" />
           </span>
@@ -97,7 +94,7 @@ export default function Sidebar() {
           onClick={() => {
             logout();
           }}
-          className="font-semibold"
+          className="font-semibold flex items-center gap-2"
         >
           <span>
             <Image width={16} height={16} src="/sair.svg" alt="Sair" />

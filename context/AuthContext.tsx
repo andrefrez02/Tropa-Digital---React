@@ -37,13 +37,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loggedUser]);
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      !loggedUser &&
-      window.location.pathname !== "/"
-    ) {
-      window.location.replace("/");
-    }
+    setTimeout(() => {
+      const user = localStorage.getItem("loggedUser");
+      console.log(user);
+      if (
+        typeof window !== "undefined" &&
+        user === null &&
+        document.querySelector("#index-page") === null
+      ) {
+        window.location.replace("/");
+      }
+    }, 1000);
   }, [loggedUser]);
 
   const setLoggedUser = (user: User | null) => setLoggedUserState(user);

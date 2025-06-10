@@ -32,8 +32,9 @@ export default function Home() {
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center p-24"
+      className="flex min-h-screen flex-col items-center justify-center p-24 flex-1"
       style={{ backgroundColor: "#f9fbff" }}
+      id="index-page"
     >
       <div
         className="bg-white rounded-[30px] p-5  text-[#cc6237] w-[50%]"
