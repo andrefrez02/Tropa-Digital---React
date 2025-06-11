@@ -39,7 +39,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setTimeout(() => {
       const user = localStorage.getItem("loggedUser");
-      console.log(user);
       if (
         typeof window !== "undefined" &&
         user === null &&

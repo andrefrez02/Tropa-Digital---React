@@ -23,7 +23,6 @@ export default function Home() {
       setError("");
       setLoggedUser(found);
       window.location.assign("/dashboard");
-      console.log("Usuário encontrado:", found);
     } else {
       setError("E-mail ou senha inválidos.");
       setSuccess(false);
