@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Sidebar from "./Components/Sidebar";
 import { AuthProvider } from "@/context/AuthContext";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Sidebar from "./Components/Sidebar";
+import "./sass/main.sass";
 
 export const metadata: Metadata = {
   title: "Tropa Digital",
@@ -26,9 +15,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex transition ease-in-out duration-200`}
-      >
+      <body className={`antialiased flex transition ease-in-out duration-200`}>
         <AuthProvider>
           <Sidebar />
           {children}

@@ -1,17 +1,15 @@
 "use client";
-import Image from "next/image";
 import { User, users } from "./Components/users";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 export default function Home() {
   const { setLoggedUser } = useAuth();
-
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,26 +17,19 @@ export default function Home() {
       (user) => user.email === email && user.password === password
     );
     if (found) {
-      setSuccess(true);
-      setError("");
       setLoggedUser(found);
       window.location.assign("/dashboard");
     } else {
       setError("E-mail ou senha inválidos.");
-      setSuccess(false);
     }
   };
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center p-24 flex-1"
-      style={{ backgroundColor: "#f9fbff" }}
+      className="flex min-h-screen flex-col items-center justify-center bg-[#f9fbff] p-24 flex-1"
       id="index-page"
     >
-      <div
-        className="bg-white rounded-[30px] p-5  text-[#cc6237] w-[50%]"
-        style={{ boxShadow: "0px 100px 200px 0px #00000040" }}
-      >
+      <div className="bg-white rounded-[30px] p-5  text-[#cc6237] w-[50%] shadow-[0_100px_200px_0_rgba(0,0,0,0.25)]">
         <div className="flex justify-between items-center">
           <div>
             <Image
@@ -120,11 +111,6 @@ export default function Home() {
                 </div>
                 {error && (
                   <div className="text-red-500 font-semibold">{error}</div>
-                )}
-                {success && (
-                  <div className="text-green-600 font-semibold">
-                    Login realizado com sucesso!
-                  </div>
                 )}
                 <button className="px-6 py-2 rounded-full bg-[#cc6237] text-white font-semibold hover:bg-[#b0552f] transition-colors btn-lg cursor-pointer mt-4">
                   Enviar

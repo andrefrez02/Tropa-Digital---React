@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 
 const tabs = [
@@ -12,17 +12,17 @@ const tabs = [
   { label: "Inscrições", icon: "inscricoes" },
 ];
 
+function clearUrl(str: string) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
+}
+
 export default function Sidebar() {
   const pathname = usePathname();
   const { loggedUser, logout } = useAuth();
-
-  function clearUrl(str: string) {
-    return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .toLowerCase();
-  }
 
   if (loggedUser === null) {
     return null;
@@ -85,7 +85,7 @@ export default function Sidebar() {
           <Image
             width={40}
             height={40}
-            src="/olho-aberto.svg"
+            src="/user.png"
             alt={loggedUser?.username || "Usuário"}
             className="w-10 h-10 rounded-[16px] object-cover shadow-[0_0_0_2px_rgba(255,255,255,1),0_0_0_4px_rgba(204,98,55,1)]"
             priority
