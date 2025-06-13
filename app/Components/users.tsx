@@ -10,4 +10,6 @@ export const users: User[] = [
   { username: "João", email: "joao@email.com", password: "tropa789" },
   { username: "Ana", email: "ana@email.com", password: "minhasenha" },
   { username: "Carlos", email: "carlos@email.com", password: "abc12345" },
+  { username: "Kaique", email: "kaique@tropa.digital", password: "senha" },
+  { username: "Usuário", email: "user@email.com", password: "senha" },
 ];
