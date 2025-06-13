@@ -1,12 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Evento, eventosMock } from "../Components/eventos";
+import DataCell from "../Components/DataCell";
+import AcoesDropdown from "../Components/AcoesDropdown";
 
 const PAGE_SIZE = 9;
-
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("pt-BR");
-}
 
 export default function Eventos() {
   const [filtro, setFiltro] = useState("");
@@ -14,30 +12,39 @@ export default function Eventos() {
   const [eventos, setEventos] = useState<Evento[]>(eventosMock);
   const [editId, setEditId] = useState<number | null>(null);
   const [editData, setEditData] = useState<Partial<Evento>>({});
+  const [dropdownId, setDropdownId] = useState<number | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const eventosFiltrados = eventos.filter((e) =>
     e.nome.toLowerCase().includes(filtro.toLowerCase())
   );
-
   const totalPaginas = Math.ceil(eventosFiltrados.length / PAGE_SIZE);
   const eventosPaginados = eventosFiltrados.slice(
     (pagina - 1) * PAGE_SIZE,
     pagina * PAGE_SIZE
   );
 
-  const [novoEventoId, setNovoEventoId] = useState<number | null>(null);
-  const novoEventoInputRef = React.useRef<HTMLInputElement>(null);
-
   React.useEffect(() => {
-    if (novoEventoId !== null && novoEventoInputRef.current) {
-      novoEventoInputRef.current.focus();
-      setNovoEventoId(null);
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownId(null);
+      }
     }
-  }, [novoEventoId, eventosPaginados]);
+    if (dropdownId !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownId]);
 
   function adicionarEvento() {
     const novoId =
       eventos.length > 0 ? Math.max(...eventos.map((e) => e.id)) + 1 : 1;
+    const hoje = new Date().toISOString().slice(0, 10);
     const novosEventos = [
       ...eventos,
       {
@@ -45,34 +52,20 @@ export default function Eventos() {
         nome: `Novo Evento ${novoId}`,
         totalEquipes: 0,
         status: "Ativo",
-        data: new Date().toISOString().slice(0, 10),
+        dataInicial: new Date(hoje),
+        dataFinal: new Date(hoje),
       },
     ];
     setEventos(novosEventos);
-    const novasPaginas = Math.ceil(
-      novosEventos.filter((e) =>
-        e.nome.toLowerCase().includes(filtro.toLowerCase())
-      ).length / PAGE_SIZE
-    );
-    setPagina(novasPaginas);
+    setPagina(Math.ceil(novosEventos.length / PAGE_SIZE));
     setEditId(novoId);
     setEditData({
       nome: `Novo Evento ${novoId}`,
       totalEquipes: 0,
       status: "Ativo",
-      data: new Date().toISOString().slice(0, 10),
+      dataInicial: new Date(hoje),
+      dataFinal: new Date(hoje),
     });
-    setNovoEventoId(novoId);
-  }
-
-  function handleFiltroChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFiltro(e.target.value);
-    setPagina(1);
-  }
-
-  function handleEditClick(evento: Evento) {
-    setEditId(evento.id);
-    setEditData({ ...evento });
   }
 
   function handleEditChange(
@@ -88,54 +81,57 @@ export default function Eventos() {
   function handleSave() {
     setEventos((prev) =>
       prev.map((ev) =>
-        ev.id === editId ? { ...ev, ...editData, id: ev.id } : ev
+        ev.id === editId
+          ? {
+              ...ev,
+              ...editData,
+              id: ev.id,
+            }
+          : ev
       )
     );
     setEditId(null);
     setEditData({});
   }
 
-  function handleDelete() {
-    setEventos((prev) => prev.filter((ev) => ev.id !== editId));
+  function handleDeleteEvento(id: number) {
+    setEventos((prev) => prev.filter((ev) => ev.id !== id));
     setEditId(null);
     setEditData({});
-  }
-
-  function handleCancel() {
-    setEditId(null);
-    setEditData({});
+    setDropdownId(null);
   }
 
   return (
     <div className="flex flex-col flex-1 min-h-screen items-center justify-start bg-[#f9fbff] p-8">
       <div
         className="bg-white rounded-[30px] w-auto shadow-lg w-full max-w-4xl p-8 mt-8 flex flex-col gap-6"
-        style={{
-          minWidth: "-webkit-fill-available",
-        }}
+        style={{ minWidth: "-webkit-fill-available" }}
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h1 className="text-3xl font-bold text-[#cc6237]">Eventos</h1>
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Buscar por nome"
+              placeholder="Buscar eventos"
               value={filtro}
-              onChange={handleFiltroChange}
-              className="px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] font-semibold"
+              onChange={(e) => {
+                setFiltro(e.target.value);
+                setPagina(1);
+              }}
+              className="px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#d1d1d1] font-semibold"
             />
             <button
               onClick={adicionarEvento}
               className="px-6 py-2 rounded-full bg-[#cc6237] text-white font-semibold hover:bg-[#b0552f] transition-colors cursor-pointer"
             >
-              Adicionar Evento
+              <span>Inserir novo</span>
             </button>
           </div>
         </div>
         <div className="overflow-x-auto rounded-lg h-[100%]">
           <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr className="bg-[#f6f6f6] text-[#cc6237]">
+            <thead className="eventos-table__header">
+              <tr className="bg-[#f6f6f6] text-[#cc6237] eventos-table__header-row">
                 <th className="py-3 px-4 text-left font-bold">
                   Nome do evento
                 </th>
@@ -144,12 +140,12 @@ export default function Eventos() {
                 </th>
                 <th className="py-3 px-4 text-left font-bold">Status</th>
                 <th className="py-3 px-4 text-left font-bold">Data</th>
-                <th className="py-3 px-4 text-left font-bold">Ações</th>
+                <th className="py-3 px-4 text-left font-bold">&nbsp;</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="eventos-table__body">
               {eventosPaginados.length === 0 ? (
-                <tr>
+                <tr className="eventos-table__body-row">
                   <td colSpan={5} className="text-center py-6 text-gray-500">
                     Nenhum evento encontrado
                   </td>
@@ -157,8 +153,11 @@ export default function Eventos() {
               ) : (
                 eventosPaginados.map((evento) =>
                   editId === evento.id ? (
-                    <tr key={evento.id} className="bg-[#f9fbff]">
-                      <td className="py-3 px-4">
+                    <tr
+                      key={evento.id}
+                      className="bg-[#f9fbff] eventos-table__body-row edicao"
+                    >
+                      <td className="py-3 px-4 w-fit flex">
                         <input
                           name="nome"
                           value={editData.nome}
@@ -166,7 +165,7 @@ export default function Eventos() {
                           className="px-2 py-1 rounded border"
                         />
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 w-fit flex">
                         <input
                           name="totalEquipes"
                           type="number"
@@ -175,7 +174,7 @@ export default function Eventos() {
                           className="px-2 py-1 rounded border w-20"
                         />
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 w-fit flex">
                         <select
                           name="status"
                           value={editData.status}
@@ -184,19 +183,42 @@ export default function Eventos() {
                         >
                           <option value="Ativo">Ativo</option>
                           <option value="Inativo">Inativo</option>
-                          <option value="Encerrado">Encerrado</option>
                         </select>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 flex gap-2 w-fit flex">
                         <input
-                          name="data"
+                          name="dataInicial"
                           type="date"
-                          value={editData.data}
+                          value={
+                            editData.dataInicial
+                              ? typeof editData.dataInicial === "string"
+                                ? editData.dataInicial
+                                : (editData.dataInicial as Date)
+                                    .toISOString()
+                                    .slice(0, 10)
+                              : ""
+                          }
+                          onChange={handleEditChange}
+                          className="px-2 py-1 rounded border"
+                        />
+                        <span className="mx-1">a</span>
+                        <input
+                          name="dataFinal"
+                          type="date"
+                          value={
+                            editData.dataFinal
+                              ? typeof editData.dataFinal === "string"
+                                ? editData.dataFinal
+                                : (editData.dataFinal as Date)
+                                    .toISOString()
+                                    .slice(0, 10)
+                              : ""
+                          }
                           onChange={handleEditChange}
                           className="px-2 py-1 rounded border"
                         />
                       </td>
-                      <td className="py-3 px-4 flex gap-2">
+                      <td className="py-3 px-4 flex gap-2 w-fit flex">
                         <button
                           onClick={handleSave}
                           className="px-3 py-1 rounded bg-green-500 text-white font-semibold hover:bg-green-600 cursor-pointer"
@@ -204,13 +226,10 @@ export default function Eventos() {
                           Salvar
                         </button>
                         <button
-                          onClick={handleDelete}
-                          className="px-3 py-1 rounded bg-red-500 text-white font-semibold hover:bg-red-600 cursor-pointer"
-                        >
-                          Excluir
-                        </button>
-                        <button
-                          onClick={handleCancel}
+                          onClick={() => {
+                            setEditId(null);
+                            setEditData({});
+                          }}
                           className="px-3 py-1 rounded bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 cursor-pointer"
                         >
                           Cancelar
@@ -220,31 +239,53 @@ export default function Eventos() {
                   ) : (
                     <tr
                       key={evento.id}
-                      className="hover:bg-[#f9fbff] transition-colors"
+                      className="hover:bg-[#f9fbff] transition-colors eventos-table__body-row"
                     >
-                      <td className="py-3 px-4">{evento.nome}</td>
-                      <td className="py-3 px-4">{evento.totalEquipes}</td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 w-fit flex">{evento.nome}</td>
+                      <td className="py-3 px-4 w-fit flex">
+                        {evento.totalEquipes}
+                      </td>
+                      <td className="py-3 px-4 w-fit flex gap-2 items-center">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          className={`rounded-full text-[0px] h-[10px] w-[10px] ${
                             evento.status === "Ativo"
-                              ? "bg-green-100 text-green-700"
-                              : evento.status === "Inativo"
-                              ? "bg-red-100 text-red-700"
-                              : "bg-gray-200 text-gray-600"
+                              ? "bg-[#4cef00]"
+                              : "bg-[#ff3b3b]"
                           }`}
                         >
+                          &nbsp;
+                        </span>
+                        <span className="font-semibold text-[#657593]">
                           {evento.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{formatDate(evento.data)}</td>
-                      <td className="py-3 px-4">
-                        <button
-                          onClick={() => handleEditClick(evento)}
-                          className="px-3 py-1 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 cursor-pointer"
-                        >
-                          Editar
-                        </button>
+                      <td className="py-3 px-4 w-fit flex">
+                        <DataCell
+                          dataInicial={
+                            evento.dataInicial instanceof Date
+                              ? evento.dataInicial.toISOString().slice(0, 10)
+                              : evento.dataInicial
+                          }
+                          dataFinal={
+                            evento.dataFinal instanceof Date
+                              ? evento.dataFinal.toISOString().slice(0, 10)
+                              : evento.dataFinal
+                          }
+                        />
+                      </td>
+                      <td className="py-3 px-4 relative w-fit flex">
+                        <AcoesDropdown
+                          evento={evento}
+                          onEdit={(e) => {
+                            setEditId(e.id);
+                            setEditData({ ...e });
+                            setDropdownId(null);
+                          }}
+                          onDelete={handleDeleteEvento}
+                          open={dropdownId}
+                          setOpen={setDropdownId}
+                          dropdownRef={dropdownRef}
+                        />
                       </td>
                     </tr>
                   )

@@ -1,0 +1,25 @@
+.eventos-table
+  &__header
+    display: grid
+    width: 100%
+
+    &-row
+      display: grid
+      width: 100%
+      grid-template-columns: 0.66fr .375fr .365fr 1fr auto
+      align-items: center
+      justify-items: start
+
+  &__body
+    display: flex
+    flex-direction: column
+
+    &-row
+      display: grid
+      width: 100%
+      grid-template-columns: 0.7fr 0.4fr 0.4fr 1fr auto
+      align-items: center
+      justify-items: start
+
+      &.edicao
+        grid-template-columns: .88fr 0.5fr 0.5fr 0.98fr auto

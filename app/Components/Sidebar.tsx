@@ -24,7 +24,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { loggedUser, logout } = useAuth();
 
-  if (loggedUser === null) {
+  if (loggedUser === null || document.querySelector("#index-page") !== null) {
     return null;
   }
 
