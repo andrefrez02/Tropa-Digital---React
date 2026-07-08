@@ -36,7 +36,7 @@ export default function Sidebar() {
             width={64}
             height={64}
             className="w-48 h-16 mx-auto object-contain"
-            src="/logo.png"
+            src="/tropa-icone.svg"
             alt="Nova Digital Logo"
             priority
           />

@@ -1,0 +1,27 @@
+<svg width="205" height="26" viewBox="0 0 205 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <g fill="#CC6237">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11 1.5 H17 A7 7 0 0 1 24 8.5 V12.5 A7 7 0 0 1 17 19.5 H11 A7 7 0 0 1 4 12.5 V8.5 A7 7 0 0 1 11 1.5 Z&#xA;         M14 5.5 A5 5 0 1 0 14 15.5 A5 5 0 1 0 14 5.5 Z"></path>
+    <rect x="10.5" y="4.2" width="7" height="1.6" rx="0.8"></rect>
+    <rect x="9" y="20.5" width="10" height="4" rx="0.8"></rect>
+  </g>
+
+  
+  <g fill="none" stroke="#D8BCA9" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    
+    <path d="M35 21 V3 M35 3 L48 21 M48 21 V3"></path>
+    
+    <ellipse cx="63" cy="12" rx="8" ry="9"></ellipse>
+    
+    <path d="M78 3 L86 21 L94 3"></path>
+    
+    <path d="M100 21 L108 3 L116 21 M103.5 14 H112.5"></path>
+  </g>
+
+  
+  <g fill="#CC6237">
+    <rect x="124" y="7.2" width="61" height="1.4"></rect>
+    <text x="124" y="18.3" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="7.5" letter-spacing="4.2" fill="#CC6237">DIGITAL</text>
+    <rect x="124" y="21.2" width="61" height="1.4"></rect>
+  </g>
+</svg>

@@ -42,7 +42,7 @@ export default function Home() {
               width={64}
               height={64}
               className="w-64 h-16 my-8 object-contain"
-              src="/logo.png"
+              src="/tropa-icone.svg"
               alt="Nova Digital Logo"
               priority
             />
