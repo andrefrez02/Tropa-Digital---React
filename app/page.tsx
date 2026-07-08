@@ -65,7 +65,7 @@ export default function Home() {
                   placeholder="seunome@seuservidor.com"
                   className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold"
                   value={'user@test.com'}
-                  onChange={(e) => setEmail(e.target.value)}
+                  // onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="password" className="block text-base font-bold">
                   Senha
@@ -79,7 +79,7 @@ export default function Home() {
                     placeholder="Digite aqui"
                     className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold pr-10"
                     value={'password'}
-                    onChange={(e) => setPassword(e.target.value)}
+                    // onChange={(e) => setPassword(e.target.value)}
                   />
                   <button
                     type="button"
@@ -115,9 +115,9 @@ export default function Home() {
                     )}
                   </button>
                 </div>
-                {error && (
+                {/* {error && (
                   <div className="text-red-500 font-semibold">{error}</div>
-                )}
+                )} */}
                 <button className="px-6 py-2 rounded-full bg-[#cc6237] text-white font-semibold hover:bg-[#b0552f] transition-colors btn-lg cursor-pointer mt-4">
                   Enviar
                 </button>
