@@ -13,15 +13,21 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // const found: User | undefined = users.find(
+    //   (user) => user.email === email && user.password === password
+    // );
+    // if (found) {
+    //   setLoggedUser(found);
+    //   window.location.assign("/dashboard");
+    // } else {
+    //   setError("E-mail ou senha inválidos.");
+    // }
     const found: User | undefined = users.find(
-      (user) => user.email === email && user.password === password
+      (user) => user.email === 'user@test.com' && user.password === 'password'
     );
-    if (found) {
+    if (found)
       setLoggedUser(found);
       window.location.assign("/dashboard");
-    } else {
-      setError("E-mail ou senha inválidos.");
-    }
   };
 
   return (
@@ -36,8 +42,8 @@ export default function Home() {
               width={64}
               height={64}
               className="w-64 h-16 my-8 object-contain"
-              src="/logo.svg"
-              alt="Tropa Digital Logo"
+              src="/logo.png"
+              alt="Nova Digital Logo"
               priority
             />
             <div className="mb-6">
@@ -58,7 +64,7 @@ export default function Home() {
                   required
                   placeholder="seunome@seuservidor.com"
                   className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold"
-                  value={email}
+                  value={'user@test.com'}
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="password" className="block text-base font-bold">
@@ -72,7 +78,7 @@ export default function Home() {
                     required
                     placeholder="Digite aqui"
                     className="w-full px-4 py-2 rounded-full bg-[#f6f6f6] focus:outline-none focus:ring-2 focus:ring-[#cc6237] placeholder:text-[#657593] placeholder:font-normal font-semibold pr-10"
-                    value={password}
+                    value={'password'}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <button
@@ -124,7 +130,7 @@ export default function Home() {
               height={64}
               className="w-max h-max"
               src="/login.svg"
-              alt="Tropa Digital Logo"
+              alt="Nova Digital Logo"
               priority
             />
           </div>

@@ -4,8 +4,8 @@ import Sidebar from "./Components/Sidebar";
 import "./sass/main.sass";
 
 export const metadata: Metadata = {
-  title: "Tropa Digital",
-  description: "Teste prático para desenvolvedor front-end na Tropa Digital",
+  title: "Nova Digital",
+  description: "Teste prático para desenvolvedor front-end na Nova Digital",
 };
 
 export default async function RootLayout({

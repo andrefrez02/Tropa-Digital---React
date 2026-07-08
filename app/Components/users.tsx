@@ -5,6 +5,7 @@ export type User = {
 };
 
 export const users: User[] = [
+  { username: "Test User", email: "user@test.com", password: "password" },
   { username: "André", email: "andre02@gmail.com", password: "senha123" },
   { username: "Maria", email: "maria@email.com", password: "segredo456" },
   { username: "João", email: "joao@email.com", password: "tropa789" },
